@@ -1,49 +1,61 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    </head>
     <body>
-        <h1>Welcome {{ user.username }} !!!</h1>
+        <div class="container">
+            <h1>Welcome {{ user.username }} !!!</h1>
 
-        <div id="container"></div>
-        <a href="{% url "account_logout" %}">Logout</a>
+            <div id="reactContainer"></div>
+
+            <div><a href="{% url "account_logout" %}">Logout</a></div>
+        </div>
 
         <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+        
         <script type="text/babel">
             class DistanceForm extends React.Component {
                 constructor(props) {
                     super(props);
-                    this.state = { distance: 1, activities: [] };
+                    this.state = { minDistance: 3, maxDistance: 5, activities: [] };
                     this.handleChange = this.handleChange.bind(this);
                     this.loadActivities();
                 }
 
                 loadActivities() {
-                    fetch('/activities/' + this.state.distance)
-                            .then(response => response.json())
-                            .then(data => this.setState({ activities: data })
+                    fetch('/activities/')
+                        .then(response => response.json())
+                        .then(data => this.setState({ activities: data })
                     );
                 }
 
                 handleChange(event) {
-                    this.setState({distance: event.target.value});
-                    this.loadActivities();
+                    this.setState({[event.target.id]: event.target.value});
                 }
 
                 render() {
                     return (
                         <div>
-                            <label>Distance:</label>
-                            <input type="number" id="distance" name="distance" min="0" max="10" value={this.state.distance} onChange={this.handleChange} />
-                            <ul>
-                            {this.state.activities.map((activity, key) =>
-                                <li key={activity.id}>{activity.name} - {activity.start_date_local} - {activity.distance}</li>
-                            )}
-                            </ul>
+                            <label>Min Distance:</label>
+                            <input type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
+                            <label>Max Distance:</label>
+                            <input type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
+                            
+                            <div className="columns is-multiline">                      
+                                {this.state.activities.filter(e => e.distance >= this.state.minDistance && e.distance <= this.state.maxDistance ).map((activity, key) =>
+                                    <div className="column is-one-quarter" key={activity.id}>
+                                        <strong>{activity.name}</strong>
+                                        <p>{activity.date} - {activity.distance}</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     );
                 }
             }
-            const domContainer = document.querySelector('#container');
+            const domContainer = document.querySelector('#reactContainer');
             ReactDOM.render(<DistanceForm/>, domContainer);    
         </script>
     </body>
