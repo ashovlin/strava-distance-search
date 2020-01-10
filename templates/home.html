@@ -58,7 +58,7 @@
                             <div className="columns is-multiline">                      
                                 {this.state.activities ? this.state.activities.filter(e => 
                                     e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
-                                    <ActivityCard acitivity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
+                                    <ActivityCard activity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
                                 }
                             </div>
                         </div>
@@ -67,10 +67,19 @@
             }
 
             function ActivityCard(props) {
+                let activityUrl = "https://www.strava.com/activities/" + props.activity.id;
+                let stravaLinkStyle = { color: '#FC4C02'};
+
                 return (
-                    <div className="column is-one-quarter" key={props.id}>
-                        <strong>{props.name}</strong>
-                        <p>{props.date} - {props.distance}</p>
+                    <div className="column is-one-quarter" key={props.activity.id}>
+                        <div className="card">
+                            <div className="card-content">
+                                <strong>{props.activity.name}</strong>
+                                <p><a href={activityUrl} style={stravaLinkStyle} target="_blank">View On Strava</a></p>
+                                <p>{props.activity.date}</p>
+                                <p>{props.activity.distance}mi</p>
+                            </div>
+                        </div>
                     </div>
                 );
             }
