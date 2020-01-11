@@ -1,3 +1,4 @@
+{%load static %}
 <html>
     <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
@@ -18,5 +19,9 @@
         {% block content %}
         {% endblock %}
         </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <img src="{% static "images/api_logo_pwrdBy_strava_horiz_light.png" %}" alt="Powered By Strava">
+            </div>
     </body>
 </html>

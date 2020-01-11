@@ -44,8 +44,13 @@ def load_activities(access_token):
             new_activity['id'] = activity['id']
             new_activity['name'] = activity['name']
             new_activity['date'] = datetime.strptime(activity['start_date_local'].split('T')[0], "%Y-%m-%d").date()
+            new_activity['start_latitude'] = activity['start_latitude']
+            new_activity['start_longitude'] = activity['start_longitude']
+            new_activity['polyline'] = activity['map']['summary_polyline']
             new_activity['distance'] = round(activity['distance'] / 1609, 2)
-            output.append(new_activity)
+
+            if new_activity['polyline']:
+                output.append(new_activity)
     return output
 
 def refresh_token(access_token):

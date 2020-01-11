@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
+
 
 {% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+crossorigin=""/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet-src.js" integrity="sha256-wc8X54qvAHZGQY6nFv24TKlc3wtO0bgAfqj8AutTIu0=" crossorigin="anonymous"></script>
+<script src="{% static "scripts/Polyline.encoded.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -9,8 +16,50 @@
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 
 <script type="text/babel">
+    class ActivityCard extends React.Component {
+        constructor(props) {
+            super(props);
+        }
+
+        componentDidMount() {
+            const mapId = "map-for-" + this.props.activity.id;
+    
+            var myMap = L.map(mapId).setView([this.props.activity.start_latitude, this.props.activity.start_longitude], 13);
+            var layer = new L.StamenTileLayer("terrain");
+            myMap.addLayer(layer);
+
+            L.polyline(L.PolylineUtil.decode(this.props.activity.polyline), {color: 'blue', weight: 5, lineJoin: 'round'}).addTo(myMap);   
+        }
+
+        render() {
+            let activityUrl = "https://www.strava.com/activities/" + this.props.activity.id;
+            let stravaLinkStyle = { color: '#FC4C02'};
+            let mapStyle = { height: '360px', width: '100%'};
+            let mapId = "map-for-" + this.props.activity.id;
+
+            return (
+                <div className="column is-one-quarter" key={this.props.activity.id}>
+                    <div className="card">
+                        <div className="card-image">
+                            <div id={mapId} style={mapStyle}></div>
+                        </div>
+                        <div className="card-content">
+                            <div> 
+                                <strong>{this.props.activity.name}</strong>
+                                <p><a href={activityUrl} style={stravaLinkStyle} target="_blank">View On Strava</a></p>
+                                <p>{this.props.activity.date}</p>
+                                <p>{this.props.activity.distance}mi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+    }
+
     class DistanceForm extends React.Component {
         constructor(props) {
             super(props);
@@ -31,7 +80,6 @@
         }
 
         render() {
-
             return (
                 <div>
                     <div className="column is-half is-offset-one-quarter">
@@ -55,24 +103,6 @@
                 </div>
             );
         }
-    }
-
-    function ActivityCard(props) {
-        let activityUrl = "https://www.strava.com/activities/" + props.activity.id;
-        let stravaLinkStyle = { color: '#FC4C02'};
-
-        return (
-            <div className="column is-one-quarter" key={props.activity.id}>
-                <div className="card">
-                    <div className="card-content">
-                        <strong>{props.activity.name}</strong>
-                        <p><a href={activityUrl} style={stravaLinkStyle} target="_blank">View On Strava</a></p>
-                        <p>{props.activity.date}</p>
-                        <p>{props.activity.distance}mi</p>
-                    </div>
-                </div>
-            </div>
-        );
     }
     
     const domContainer = document.querySelector('#reactContainer');
