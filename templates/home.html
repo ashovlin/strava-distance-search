@@ -1,91 +1,82 @@
-<html>
-    <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-    </head>
-    <body>
-        <div class="navbar">
-            <div class="navbar-menu">         
-                <div class="navbar-end">
-                    <a class="navbar-item" href="{% url "account_logout" %}">Logout</a>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div id="reactContainer"></div>
+{% extends 'base.html' %}
 
-        </div>
+{% block head %}
+{% endblock %}
 
-        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
-        
-        <script type="text/babel">
-            class DistanceForm extends React.Component {
-                constructor(props) {
-                    super(props);
-                    this.state = { minDistance: 3, maxDistance: 5, activities: [], error: "" };
-                    this.handleChange = this.handleChange.bind(this);
-                    this.loadActivities();
-                }
+{% block content %}
+<div id="reactContainer"></div>
 
-                loadActivities() {
-                    fetch('/activities/')
-                        .then(response => response.json())
-                        .then(data => this.setState({ activities: data.activities, error: data.error})
-                    );
-                }
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 
-                handleChange(event) {
-                    this.setState({[event.target.id]: event.target.value});
-                }
+<script type="text/babel">
+    class DistanceForm extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { minDistance: 3, maxDistance: 5, activities: [], error: "" };
+            this.handleChange = this.handleChange.bind(this);
+            this.loadActivities();
+        }
 
-                render() {
+        loadActivities() {
+            fetch('/activities/')
+                .then(response => response.json())
+                .then(data => this.setState({ activities: data.activities, error: data.error})
+            );
+        }
 
-                    return (
-                        <div>
-                            <div className="column is-half is-offset-one-quarter">
-                                <div className="field">
-                                    <label className="label">Min Distance:</label>
-                                    <input className="input" type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
-                                
-                                </div>
-                                <div className="field">
-                                    <label className="label">Max Distance:</label>
-                                    <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
-                                </div>
-                            </div>
+        handleChange(event) {
+            this.setState({[event.target.id]: event.target.value});
+        }
 
-                            <div className="columns is-multiline">                      
-                                {this.state.activities ? this.state.activities.filter(e => 
-                                    e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
-                                    <ActivityCard activity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
-                                }
-                            </div>
+        render() {
+
+            return (
+                <div>
+                    <div className="column is-half is-offset-one-quarter">
+                        <div className="field">
+                            <label className="label">Min Distance:</label>
+                            <input className="input" type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
+                        
                         </div>
-                    );
-                }
-            }
-
-            function ActivityCard(props) {
-                let activityUrl = "https://www.strava.com/activities/" + props.activity.id;
-                let stravaLinkStyle = { color: '#FC4C02'};
-
-                return (
-                    <div className="column is-one-quarter" key={props.activity.id}>
-                        <div className="card">
-                            <div className="card-content">
-                                <strong>{props.activity.name}</strong>
-                                <p><a href={activityUrl} style={stravaLinkStyle} target="_blank">View On Strava</a></p>
-                                <p>{props.activity.date}</p>
-                                <p>{props.activity.distance}mi</p>
-                            </div>
+                        <div className="field">
+                            <label className="label">Max Distance:</label>
+                            <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
                         </div>
                     </div>
-                );
-            }
-            
-            const domContainer = document.querySelector('#reactContainer');
-            ReactDOM.render(<DistanceForm/>, domContainer);    
-        </script>
-    </body>
-</html>
+
+                    <div className="columns is-multiline">                      
+                        {this.state.activities ? this.state.activities.filter(e => 
+                            e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
+                            <ActivityCard activity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
+                        }
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    function ActivityCard(props) {
+        let activityUrl = "https://www.strava.com/activities/" + props.activity.id;
+        let stravaLinkStyle = { color: '#FC4C02'};
+
+        return (
+            <div className="column is-one-quarter" key={props.activity.id}>
+                <div className="card">
+                    <div className="card-content">
+                        <strong>{props.activity.name}</strong>
+                        <p><a href={activityUrl} style={stravaLinkStyle} target="_blank">View On Strava</a></p>
+                        <p>{props.activity.date}</p>
+                        <p>{props.activity.distance}mi</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
+    const domContainer = document.querySelector('#reactContainer');
+    ReactDOM.render(<DistanceForm/>, domContainer);    
+</script>
+
+{% endblock %}
