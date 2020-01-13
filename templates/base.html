@@ -2,21 +2,9 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+        <link rel="stylesheet" href="{% static "styles/style.css" %}">
         {% block head %}
         {% endblock %}
-        <style>
-            body {
-                display: flex;
-                min-height: 100vh;
-                flex-direction: column;
-            }
-            .container {
-                flex: 1;
-            }
-            .footer {
-                height: 1px;
-            }
-         </style>
     </head>
     <body>
         {% if user.is_authenticated %}
@@ -31,9 +19,11 @@
             </div>
         </div>
         {% endif %}
-        <div class="container">
-        {% block content %}
-        {% endblock %}
+        <div class="section">
+            <div class="container">
+            {% block content %}
+            {% endblock %}
+            </div>
         </div>
         <footer class="footer">
             <div class="content has-text-centered">

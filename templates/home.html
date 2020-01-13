@@ -62,15 +62,25 @@ crossorigin=""/>
     class DistanceForm extends React.Component {
         constructor(props) {
             super(props);
-            this.state = { minDistance: 3, maxDistance: 5, activities: [], error: "" };
+            this.state = { 
+                minDistance: 3, 
+                maxDistance: 5, 
+                activities: [], 
+                error: "",
+                isLoading: true
+            };
             this.handleChange = this.handleChange.bind(this);
+        }
+
+        componentDidMount() {
             this.loadActivities();
         }
 
         loadActivities() {
+            this.setState({isLoading: true})
             fetch('/activities/')
                 .then(response => response.json())
-                .then(data => this.setState({ activities: data.activities, error: data.error})
+                .then(data => this.setState({ activities: data.activities, error: data.error, isLoading: false})
             );
         }
 
@@ -79,6 +89,8 @@ crossorigin=""/>
         }
 
         render() {
+            const isLoading = this.state.isLoading;
+
             return (
                 <div>
                     <div className="column is-half is-offset-one-quarter">
@@ -92,13 +104,21 @@ crossorigin=""/>
                             <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
                         </div>
                     </div>
-
-                    <div className="columns is-multiline">                      
-                        {this.state.activities ? this.state.activities.filter(e => 
-                            e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
-                            <ActivityCard activity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
-                        }
-                    </div>
+                    {isLoading ? (
+                        <div className="columns is-centered has-text-centered">
+                            <div className="column">
+                                <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+                            </div>
+                        </div>
+                        ) : (
+                        <div className="columns is-multiline">                      
+                            {this.state.activities ? this.state.activities.filter(e => 
+                                e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
+                                <ActivityCard activity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
+                            }
+                        </div>
+                        )                     
+                    }
                 </div>
             );
         }
