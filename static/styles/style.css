@@ -24,6 +24,10 @@ body {
     width: 169px;
 }
 
+#sliderField, #slider {
+    width: 100%;
+}
+
 .lds-ring {
     display: inline-block;
     position: relative;

@@ -4,8 +4,10 @@
 {% block head %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet-src.js" integrity="sha256-wc8X54qvAHZGQY6nFv24TKlc3wtO0bgAfqj8AutTIu0=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" type="text/css" rel="stylesheet" />
 <script src="{% static "scripts/Polyline.encoded.js" %}"></script>
-<link href="{% static "styles/style.css" %}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
@@ -61,7 +63,19 @@
         }
 
         componentDidMount() {
-            this.loadActivities();        
+            $( () =>  {
+                $( "#slider" ).slider({
+                    range: true,
+                    min: 0,
+                    max: 10,
+                    step: 0.1,
+                    values: [ this.state.minDistance, this.state.maxDistance ],
+                    slide: (event, ui) => {
+                        this.setState({minDistance: ui.values[0], maxDistance: ui.values[1]})
+                    }
+                });
+            });
+            this.loadActivities();
         }
 
         loadActivities() {
@@ -80,17 +94,30 @@
             const isLoading = this.state.isLoading;
             return (
                 <div>
-                    <div className="column is-half is-offset-one-quarter">
-                        <div className="field">
-                            <label className="label">Min Distance:</label>
-                            <input className="input" type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
-                        
-                        </div>
-                        <div className="field">
-                            <label className="label">Max Distance:</label>
-                            <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
+                    <div className="column is-10 is-offset-1">
+                        <div class="field is-horizontal">
+                            <div class="field-body">
+                                <div className="field is-horizontal">
+                                    <label className="label">Min Distance</label>
+                                    <div className="control">
+                                        <input className="input" type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
+                                    </div>
+                                </div>
+
+                                <div id="sliderField" className="field is-horizontal">
+                                    <div id="slider"></div>
+                                </div>
+
+                                <div className="field is-horizontal">
+                                    <div className="control">
+                                        <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
+                                    </div>
+                                    <label className="label">Max Distance</label>
+                                </div>
+                            </div>                        
                         </div>
                     </div>
+
                     { isLoading ? (
                         <div className="lds-ring column is-half is-offset-one-quarter "><div></div><div></div><div></div><div></div></div>
                     ) : (
