@@ -1,3 +1,15 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+.container {
+    flex: 1 0 auto;
+}
+.footer {
+    height: 1px;
+}
+
 .stravaLink {
     color: #FC4C02;
 }
@@ -5,6 +17,11 @@
 .map {
     height: 360px;
     width: 100%;
+}
+
+#stravaFooter {
+    height: 32px;
+    width: 169px;
 }
 
 .lds-ring {
