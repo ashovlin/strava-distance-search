@@ -2,11 +2,10 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet-src.js" integrity="sha256-wc8X54qvAHZGQY6nFv24TKlc3wtO0bgAfqj8AutTIu0=" crossorigin="anonymous"></script>
 <script src="{% static "scripts/Polyline.encoded.js" %}"></script>
+<link href="{% static "styles/style.css" %}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
@@ -15,8 +14,6 @@ crossorigin=""/>
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
-<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
-
 <script type="text/babel">
     class ActivityCard extends React.Component {
         constructor(props) {
@@ -27,28 +24,24 @@ crossorigin=""/>
             const mapId = "map-for-" + this.props.activity.id;
     
             var myMap = L.map(mapId).setView([this.props.activity.start_latitude, this.props.activity.start_longitude], 13);
-            var layer = new L.StamenTileLayer("terrain");
-            myMap.addLayer(layer);
-
+            L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'}).addTo(myMap);
             L.polyline(L.PolylineUtil.decode(this.props.activity.polyline), {color: 'blue', weight: 5, lineJoin: 'round'}).addTo(myMap);   
         }
 
         render() {
             let activityUrl = "https://www.strava.com/activities/" + this.props.activity.id;
-            let stravaLinkStyle = { color: '#FC4C02'};
-            let mapStyle = { height: '360px', width: '100%'};
             let mapId = "map-for-" + this.props.activity.id;
 
             return (
                 <div className="column is-one-quarter" key={this.props.activity.id}>
                     <div className="card">
                         <div className="card-image">
-                            <div id={mapId} style={mapStyle}></div>
+                            <div id={mapId} className="map"></div>
                         </div>
                         <div className="card-content">
                             <div> 
                                 <strong>{this.props.activity.name}</strong>
-                                <p><a href={activityUrl} style={stravaLinkStyle} target="_blank">View On Strava</a></p>
+                                <p><a href={activityUrl} className="stravaLink" target="_blank">View On Strava</a></p>
                                 <p>{this.props.activity.date}</p>
                                 <p>{this.props.activity.distance}mi</p>
                             </div>
@@ -62,15 +55,20 @@ crossorigin=""/>
     class DistanceForm extends React.Component {
         constructor(props) {
             super(props);
-            this.state = { minDistance: 3, maxDistance: 5, activities: [], error: "" };
+            this.state = { minDistance: 3, maxDistance: 5, activities: [], error: "", isLoading: true };
             this.handleChange = this.handleChange.bind(this);
-            this.loadActivities();
+            
+        }
+
+        componentDidMount() {
+            this.loadActivities();        
         }
 
         loadActivities() {
+            this.setState({isLoading: true});
             fetch('/activities/')
                 .then(response => response.json())
-                .then(data => this.setState({ activities: data.activities, error: data.error})
+                .then(data => this.setState({ activities: data.activities, error: data.error, isLoading: false})
             );
         }
 
@@ -79,6 +77,7 @@ crossorigin=""/>
         }
 
         render() {
+            const isLoading = this.state.isLoading;
             return (
                 <div>
                     <div className="column is-half is-offset-one-quarter">
@@ -92,13 +91,16 @@ crossorigin=""/>
                             <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
                         </div>
                     </div>
-
-                    <div className="columns is-multiline">                      
-                        {this.state.activities ? this.state.activities.filter(e => 
-                            e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
-                            <ActivityCard activity={activity}/> ) : <p className="notification is-warning">{this.state.error}</p>
-                        }
-                    </div>
+                    { isLoading ? (
+                        <div className="lds-ring column is-half is-offset-one-quarter "><div></div><div></div><div></div><div></div></div>
+                    ) : (
+                        <div className="columns is-multiline">                      
+                            {this.state.activities ? this.state.activities.filter(e => 
+                                e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
+                                <ActivityCard activity={activity} key={activity.id} /> ) : <p className="notification is-warning">{this.state.error}</p>
+                            }
+                        </div>
+                    )}
                 </div>
             );
         }
