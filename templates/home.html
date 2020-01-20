@@ -41,11 +41,16 @@
                             <div id={mapId} className="map"></div>
                         </div>
                         <div className="card-content">
-                            <div> 
-                                <strong>{this.props.activity.name}</strong>
-                                <p><a href={activityUrl} className="stravaLink" target="_blank">View On Strava</a></p>
-                                <p>{this.props.activity.date}</p>
-                                <p>{this.props.activity.distance}mi</p>
+                            <div className="columns">
+                                <div className="column">
+                                    <strong>{this.props.activity.name}</strong>            
+                                    <p>{this.props.activity.date}</p>
+                                    <p><a href={activityUrl} className="stravaLink" target="_blank">View On Strava</a></p>
+                                </div>
+                                <div className="column has-text-right">
+                                    <p className="is-size-4">{this.props.activity.distance} mi</p>
+                                    <p>{this.props.activity.pace} /mi</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,8 +100,8 @@
             return (
                 <div>
                     <div className="column is-10 is-offset-1">
-                        <div class="field is-horizontal">
-                            <div class="field-body">
+                        <div className="field is-horizontal">
+                            <div className="field-body">
                                 <div className="field is-horizontal">
                                     <label className="label">Min Distance</label>
                                     <div className="control">

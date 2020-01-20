@@ -43,12 +43,14 @@ def load_activities(access_token):
             new_activity = {}   # Only send the fields we use
             new_activity['id'] = activity['id']
             new_activity['name'] = activity['name']
-            new_activity['date'] = datetime.strptime(activity['start_date_local'].split('T')[0], "%Y-%m-%d").date()
+            new_activity['date'] = datetime.strptime(activity['start_date_local'].split('T')[0], "%Y-%m-%d").strftime('%b %d, %Y')
             new_activity['start_latitude'] = activity['start_latitude']
             new_activity['start_longitude'] = activity['start_longitude']
             new_activity['polyline'] = activity['map']['summary_polyline']
             new_activity['distance'] = round(activity['distance'] / 1609, 2)
-
+            seconds_per_mile = activity['moving_time'] / new_activity['distance']
+            new_activity['pace'] = str(int(seconds_per_mile // 60)) + ":" + str(int(seconds_per_mile % 60))
+            
             if new_activity['polyline']:
                 output.append(new_activity)
     return output
