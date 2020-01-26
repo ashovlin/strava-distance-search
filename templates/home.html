@@ -99,32 +99,36 @@
             const isLoading = this.state.isLoading;
             return (
                 <div>
-                    <div className="column is-10 is-offset-1">
-                        <div className="field is-horizontal">
-                            <div className="field-body">
-                                <div className="field is-horizontal">
-                                    <label className="label">Min Distance</label>
-                                    <div className="control">
-                                        <input className="input" type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
+                    <div className="columns is-centered">
+                        <div className="column is-10 is-offset-1">
+                            <div className="field is-horizontal">
+                                <div className="field-body">
+                                    <div className="field">
+                                        <div className="control">
+                                            <input className="input" type="number" id="minDistance" name="minDistance" min="0" max="10" value={this.state.minDistance} onChange={this.handleChange} />
+                                        </div>
+                                        <label className="label">Min Distance</label>
                                     </div>
-                                </div>
 
-                                <div id="sliderField" className="field is-horizontal">
-                                    <div id="slider"></div>
-                                </div>
-
-                                <div className="field is-horizontal">
-                                    <div className="control">
-                                        <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
+                                    <div id="sliderField" className="field is-horizontal">
+                                        <div id="slider"></div>
                                     </div>
-                                    <label className="label">Max Distance</label>
-                                </div>
-                            </div>                        
+
+                                    <div className="field">
+                                        <div className="control">
+                                            <input className="input" type="number" id="maxDistance" name="maxDistance" min="0" max="10" value={this.state.maxDistance} onChange={this.handleChange} />    
+                                        </div>
+                                        <label className="label is-pulled-right">Max Distance</label>
+                                    </div>
+                                </div>                        
+                            </div>
                         </div>
                     </div>
 
                     { isLoading ? (
-                        <div className="lds-ring column is-half is-offset-one-quarter "><div></div><div></div><div></div><div></div></div>
+                        <div className="columns is-centered">
+                            <div className="lds-ring column is-1"><div></div><div></div><div></div><div></div></div>
+                            </div>
                     ) : (
                         <div className="columns is-multiline">                      
                             {this.state.activities ? this.state.activities.filter(e => 

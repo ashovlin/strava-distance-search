@@ -4,8 +4,8 @@ body {
     flex-direction: column;
 }
 
-.container {
-    flex: 1 0 auto;
+.section {
+    flex: 1;
 
 }
 .footer {
@@ -29,6 +29,9 @@ body {
 #sliderField, #slider {
     width: 100%;
 }
+
+#sliderField .ui-slider-handle { border-color: #FC4C02; }
+#sliderField .ui-slider-range { background: #FC4C02; }
 
 .lds-ring {
     display: inline-block;
