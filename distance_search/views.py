@@ -12,7 +12,9 @@ def Home(request):
     else:
         return render(request, 'index.html', context)
 
-
+def privacy(request):
+    return render(request, 'privacy.html')
+    
 def activities_json(request):
     if request.user.is_authenticated:
         access_token = SocialToken.objects.get(account__user=request.user, account__provider='strava')

@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', views.Home, name='home'),
-    path('activities/', views.activities_json)
+    path('activities/', views.activities_json),
+    path('privacy/', views.privacy, name='privacy')
 ]

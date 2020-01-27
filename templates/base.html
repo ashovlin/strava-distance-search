@@ -16,7 +16,7 @@
         {% if user.is_authenticated %}
         <div class="navbar">
             <div class="navbar-brand">
-                <p class="navbar-item">strava-distance-search</p>
+                <p class="navbar-item"><a href="{% url 'home' %}">strava-distance-search</a></p>
                 <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -37,9 +37,17 @@
             </div>
         </div>
         <footer class="footer">
-            <div class="content has-text-centered">
-                <img id="stravaFooter" src="{% static "images/api_logo_pwrdBy_strava_horiz_light.png" %}" alt="Powered By Strava">
-            </div>
+            <nav class="level">
+                <div class="level-item has-text-centered">
+                    <a href="{% url 'privacy' %}">Privacy Policy</a>
+                </div>
+                <div class="level-item has-text-centered">
+                    <img id="stravaFooter" src="{% static "images/api_logo_pwrdBy_strava_horiz_light.png" %}" alt="Powered By Strava">
+                </div>
+                <div class="level-item has-text-centered">
+                    <a href="https://github.com/ashovlin/strava-distance-search">Source on GitHub</a>
+                </div>
+            </nav>
         </footer>
         <script>
             $(document).ready(function() {
