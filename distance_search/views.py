@@ -51,7 +51,7 @@ def load_activities(access_token):
             seconds_per_mile = activity['moving_time'] / new_activity['distance']
             new_activity['pace'] = str(int(seconds_per_mile // 60)) + ":" + str(int(seconds_per_mile % 60))
             
-            if new_activity['polyline']:
+            if new_activity['polyline'] and activity['type'] == "Run": # excludes treadmills and other activities (for now)
                 output.append(new_activity)
     return output
 

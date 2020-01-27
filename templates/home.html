@@ -60,8 +60,7 @@
         constructor(props) {
             super(props);
             this.state = { minDistance: 3, maxDistance: 5, activities: [], error: "", isLoading: true };
-            this.handleChange = this.handleChange.bind(this);
-            
+            this.handleChange = this.handleChange.bind(this);   
         }
 
         componentDidMount() {
@@ -127,10 +126,16 @@
                             <div className="lds-ring column is-1"><div></div><div></div><div></div><div></div></div>
                             </div>
                     ) : (
-                        <div className="columns is-multiline">                      
-                            {this.state.activities ? this.state.activities.filter(e => 
+                        <div className="columns is-multiline is-centered">                      
+                            {this.state.activities && this.state.activities.length > 0 ? (this.state.activities.filter(e => 
                                 e.distance >=  this.state.minDistance &&  e.distance <= this.state.maxDistance ).map((activity, key) =>
-                                <ActivityCard activity={activity} key={activity.id} /> ) : <p className="notification is-warning">{this.state.error}</p>
+                                <ActivityCard activity={activity} key={activity.id} /> ) 
+                             ) : (
+                                 <div>
+                                 {this.state.error && <p className="notification is-warning">{this.state.error}</p>}
+                                 <p>None yet</p>
+                                 </div>
+                            )
                             }
                         </div>
                     )}
