@@ -42,20 +42,43 @@ def load_activities(access_token):
     output = []
     if response.status_code == 200:
         for activity in response.json():
-            new_activity = {}   # Only send the fields we use
-            new_activity['id'] = activity['id']
-            new_activity['name'] = activity['name']
-            new_activity['date'] = datetime.strptime(activity['start_date_local'].split('T')[0], "%Y-%m-%d").strftime('%b %d, %Y')
-            new_activity['start_latitude'] = activity['start_latitude']
-            new_activity['start_longitude'] = activity['start_longitude']
-            new_activity['polyline'] = activity['map']['summary_polyline']
-            new_activity['distance'] = round(activity['distance'] / 1609, 2)
-            seconds_per_mile = activity['moving_time'] / new_activity['distance']
-            new_activity['pace'] = str(int(seconds_per_mile // 60)) + ":" + str(int(seconds_per_mile % 60))
-            
-            if new_activity['polyline'] and activity['type'] == "Run": # excludes treadmills and other activities (for now)
-                output.append(new_activity)
+            activity = prep_activity_for_display(activity)
+        
+            if should_display_activity(activity):
+                output.append(activity)
     return output
+
+def prep_activity_for_display(activity):
+    """Adds some fields and/or formatting that we use for display to a Strava activity"""
+
+    # Convert Y-m-d to display format
+    local_date_part = activity['start_date_local'].split('T')[0]
+    local_date = datetime.strptime(local_date_part, "%Y-%m-%d")
+    activity['date'] = local_date.strftime('%b %d, %Y')
+
+    activity['polyline'] = activity['map']['summary_polyline']
+
+    # Covert meters to miles
+    activity['distance'] = round(activity['distance'] * 0.000621371, 2)
+
+    # Calculate minutes:seconds per mile
+    seconds_per_mile = activity['moving_time'] / activity['distance']
+    minutes = int(seconds_per_mile // 60)
+    seconds = round(seconds_per_mile % 60)
+    activity['pace'] = str(minutes) + ":" + str(seconds).zfill(2)
+
+    return activity
+
+def should_display_activity(activity):
+    """Determines whether we should display should be displayed (pending distance filters)"""
+
+    if activity['type'] != "Run": # other activities aren't supported yet
+        return False
+
+    if not activity['polyline']: # discards treadmill runs
+        return False
+
+    return True
 
 def refresh_token(access_token):
     """Refreshes a user's Strava access token"""

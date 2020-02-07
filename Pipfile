@@ -13,6 +13,7 @@ django-allauth = "*"
 requests = "*"
 gunicorn = "*"
 django-heroku = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"
