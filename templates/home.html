@@ -38,7 +38,7 @@
                             <div id={mapId} className="map"></div>
                         </div>
                         <div className="card-content">
-                            <div className="columns">
+                            <div className="columns is-mobile">
                                 <div className="column">
                                     <strong>{this.props.activity.name}</strong>            
                                     <p>{this.props.activity.date}</p>
@@ -122,9 +122,9 @@
                     </div>
 
                     { isLoading ? (
-                        <div className="columns is-centered">
+                        <div className="columns is-centered is-mobile">
                             <div className="lds-ring column is-1"><div></div><div></div><div></div><div></div></div>
-                            </div>
+                        </div>
                     ) : (
                         <div className="columns is-multiline is-centered">                      
                             {this.state.activities && this.state.activities.length > 0 ? (this.state.activities.filter(e => 
