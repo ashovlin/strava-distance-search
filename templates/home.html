@@ -21,8 +21,8 @@
 
         componentDidMount() {
             const mapId = "map-for-" + this.props.activity.id;
-    
-            var myMap = L.map(mapId).setView([this.props.activity.start_latitude, this.props.activity.start_longitude], 13);
+            
+            var myMap = L.map(mapId).setView([this.props.activity.start_latlng[0], this.props.activity.start_latlng[1]], 13);
             L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'}).addTo(myMap);
             L.polyline(L.PolylineUtil.decode(this.props.activity.polyline), {color: 'blue', weight: 5, lineJoin: 'round'}).addTo(myMap);   
         }
