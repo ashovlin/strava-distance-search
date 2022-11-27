@@ -12,8 +12,9 @@ django = "*"
 django-allauth = "*"
 requests = "*"
 gunicorn = "*"
-django-heroku = "*"
 coverage = "*"
+whitenoise = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.10"

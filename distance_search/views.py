@@ -17,7 +17,11 @@ def privacy(request):
     
 def activities_json(request):
     if request.user.is_authenticated:
-        access_token = SocialToken.objects.get(account__user=request.user, account__provider='strava')
+
+        try:
+            access_token = SocialToken.objects.get(account__user=request.user, account__provider='strava')
+        except SocialToken.DoesNotExist:
+            return JsonResponse({'error': "Unable to load access token", 'activities': None}, safe=False)
 
         if access_token.expires_at <= timezone.now():
             refresh_token(access_token)
