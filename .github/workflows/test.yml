@@ -3,6 +3,8 @@ on: [push]
 jobs:
   Run-Django-Tests:
     runs-on: ubuntu-latest
+    env:
+      DJANGO_SETTINGS_MODULE: 'distance_search.settings.local'
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
