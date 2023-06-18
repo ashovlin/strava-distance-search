@@ -1,11 +1,11 @@
 name: Tests
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Run-Django-Tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.10
+      - name: Set up Python
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
@@ -16,5 +16,5 @@ jobs:
           pipenv install
       - name: Test
         run: |
-          python manage.py test
+          pipenv run python manage.py test
 
