@@ -1,6 +1,9 @@
 # strava-distance-search
+_**December 2025**: Archiving, Strava's search (at least on mobile) now supports this._
+
 Search for your Strava activities within a distance range:
 ![GIF of main UI](https://alexshovlin.com/images/sds.gif)
+
 
 ## Running Locally
 1. `pipenv shell`
